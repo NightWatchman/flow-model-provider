@@ -1,4 +1,4 @@
-# @flow-model-provider
+# flow-model-provider
 
 A pi extension that integrates a custom OpenAI-compatible model provider. It translates pi's internal message format into OpenAI Chat Completions API requests, surfaces a curated list of models (Amazon Nova, Claude, DeepSeek, Llama, Mistral, Qwen, and OpenAI aliases), and emits a fully-typed `AssistantMessageEventStream` back to the agent.
 
