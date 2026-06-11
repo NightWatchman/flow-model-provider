@@ -1,4 +1,4 @@
-# @flow-model-provider
+# flow-model-provider
 
 A pi extension for consuming OpenAI-compatible model providers that do not support streaming
 (i.e. providers where the [`stream` parameter](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create#(resource)%20chat.completions%20%3E%20(method)%20create%20%3E%20(params)%200.non_streaming%20%3E%20(param)%20stream%20%3E%20(schema))
