@@ -186,7 +186,7 @@ export default function (pi: ExtensionAPI) {
     name: "Flow Model Provider",
     baseUrl: BASE_URL,
     apiKey: "FLOW_MODEL_PROVIDER_KEY",
-    api: "flow-model-provider-api",
+    api: "openai-completions",
     streamSimple: streamFlowModelProvider,
     models: [
       // Amazon Nova
