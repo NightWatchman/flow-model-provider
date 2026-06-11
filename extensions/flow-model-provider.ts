@@ -14,21 +14,8 @@ import {
   type ToolResultMessage,
 } from "@earendil-works/pi-ai";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import * as fs from "fs";
-import * as path from "path";
-
 const BASE_URL = process.env.FLOW_MODEL_PROVIDER_URL;
 if (!BASE_URL) throw new Error("FLOW_MODEL_PROVIDER_URL is not set. Export it in your shell profile before starting pi.");
-
-const LOG_FILE = path.join(
-  process.env.HOME ?? process.env.USERPROFILE ?? ".",
-  ".pi", "agent", "flow-model-provider.log"
-);
-
-function log(tag: string, data: unknown) {
-  const line = `[${new Date().toISOString()}] [${tag}] ${JSON.stringify(data, null, 2)}\n`;
-  fs.appendFileSync(LOG_FILE, line);
-}
 
 // =============================================================================
 // Message conversion (pi internal format → OpenAI format)
@@ -120,8 +107,6 @@ function streamFlowModelProvider(
       };
       if (tools?.length) body.tools = tools;
 
-      log("REQUEST", body);
-
       const response = await fetch(`${BASE_URL}/chat/completions`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
@@ -129,11 +114,8 @@ function streamFlowModelProvider(
         signal: options?.signal,
       });
 
-      log("RESPONSE", { status: response.status, contentType: response.headers.get("content-type") });
-
       if (!response.ok) {
         const text = await response.text();
-        log("HTTP_ERROR", { status: response.status, body: text });
         throw new Error(`HTTP ${response.status}: ${text}`);
       }
 
@@ -187,7 +169,6 @@ function streamFlowModelProvider(
     } catch (error) {
       output.stopReason = options?.signal?.aborted ? "aborted" : "error";
       output.errorMessage = error instanceof Error ? error.message : String(error);
-      log("ERROR", { stopReason: output.stopReason, errorMessage: output.errorMessage });
       stream.push({ type: "error", reason: output.stopReason, error: output });
       stream.end();
     }
