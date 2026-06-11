@@ -17,8 +17,8 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import * as fs from "fs";
 import * as path from "path";
 
-// Change this to the URL of your model provider
-const BASE_URL = "https://my-model-provider.com/v1";
+const BASE_URL = process.env.FLOW_MODEL_PROVIDER_URL;
+if (!BASE_URL) throw new Error("FLOW_MODEL_PROVIDER_URL is not set. Export it in your shell profile before starting pi.");
 
 const LOG_FILE = path.join(
   process.env.HOME ?? process.env.USERPROFILE ?? ".",
@@ -104,7 +104,8 @@ function streamFlowModelProvider(
     };
 
     try {
-      const apiKey = options?.apiKey ?? process.env.FLOW_MODEL_PROVIDER_KEY ?? "";
+      const apiKey = options?.apiKey ?? process.env.FLOW_MODEL_PROVIDER_KEY;
+      if (!apiKey) throw new Error("FLOW_MODEL_PROVIDER_KEY is not set. Export it in your shell profile before starting pi.");
       const messages = convertMessages(context.messages, context.systemPrompt);
 
       const tools = context.tools?.map((t) => ({
