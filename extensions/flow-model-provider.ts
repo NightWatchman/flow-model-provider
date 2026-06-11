@@ -97,7 +97,23 @@ function streamFlowModelProvider(
     try {
       const apiKey = options?.apiKey ?? process.env.FLOW_MODEL_PROVIDER_KEY;
       if (!apiKey) throw new Error("FLOW_MODEL_PROVIDER_KEY is not set. Export it in your shell profile before starting pi.");
-      const messages = convertMessages(context.messages, context.systemPrompt);
+
+      let fullSystemPrompt = context.systemPrompt || "";
+      
+      if (context.instructions) {
+        const instructionsText = Array.isArray(context.instructions) 
+          ? context.instructions.join("\n") 
+          : String(context.instructions);
+        
+        // 2. Append the instructions to the base system prompt
+        fullSystemPrompt = fullSystemPrompt 
+          ? `${fullSystemPrompt}\n\nAdditional Instructions & Skills:\n${instructionsText}`
+          : instructionsText;
+      }
+      
+      
+      const finalSystemPrompt = fullSystemPrompt.trim() || undefined;
+      const messages = convertMessages(context.messages, finalSystemPrompt);
 
       const tools = context.tools?.map((t) => ({
         type: "function",

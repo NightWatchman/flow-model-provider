@@ -1,8 +1,15 @@
 {
   "name": "flow-model-provider",
   "version": "1.0.0",
-  "keywords": ["pi-package"],
+  "keywords": [
+    "pi-package"
+  ],
   "pi": {
-    "extensions": ["./extensions"]
+    "extensions": [
+      "./extensions"
+    ]
+  },
+  "dependencies": {
+    "openai": "^6.42.0"
   }
 }
