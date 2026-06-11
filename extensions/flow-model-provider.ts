@@ -62,6 +62,10 @@ function convertMessages(messages: Message[], systemPrompt?: string): any[] {
       const m = msg as ToolResultMessage;
       const text = m.content.map((c) => (c.type === "text" ? c.text : "[image]")).join("\n");
       result.push({ role: "tool", tool_call_id: m.toolCallId, content: text });
+    } else if (msg.role === "system" || msg.role === "developer") {
+      result.push({ role: msg.role, content: msg.content });
+    } else {
+      result.push({ role: msg.role, content: String(msg.content) });
     }
   }
 
