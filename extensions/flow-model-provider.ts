@@ -63,7 +63,7 @@ function convertMessages(messages: Message[], systemPrompt?: string): any[] {
   return result;
 }
 
-export function streamNonStreamingOpenAI(
+function streamNonStreamingOpenAI(
   model: Model<Api>,
   context: Context,
   options?: SimpleStreamOptions
@@ -177,4 +177,50 @@ export function streamNonStreamingOpenAI(
   })();
 
   return stream;
+}
+
+// =============================================================================
+// Extension
+// =============================================================================
+
+export default function (pi: ExtensionAPI) {
+  pi.registerProvider("flow-model-provider", {
+    name: "Flow Model Provider",
+    baseUrl: BASE_URL,
+    apiKey: "FLOW_MODEL_PROVIDER_KEY",
+    api: "openai-completions",
+    streamSimple: streamNonStreamingOpenAI,
+    models: [
+      // Amazon Nova
+      { id: "amazon-nova-lite",    name: "Amazon Nova Lite",    reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 300000, maxTokens: 5120  },
+      { id: "amazon-nova-micro",   name: "Amazon Nova Micro",   reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 5120  },
+      { id: "amazon-nova-pro",     name: "Amazon Nova Pro",     reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 300000, maxTokens: 5120  },
+      // Claude
+      { id: "claude-v3-opus",      name: "Claude 3 Opus",       reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 200000, maxTokens: 4096  },
+      { id: "claude-v3.5-haiku",   name: "Claude 3.5 Haiku",    reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 200000, maxTokens: 8192  },
+      { id: "claude-v3.7-sonnet",  name: "Claude 3.7 Sonnet",   reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 200000, maxTokens: 16000 },
+      { id: "claude-v4.5-haiku",   name: "Claude 4.5 Haiku",    reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 200000, maxTokens: 8192  },
+      { id: "claude-v4.6-opus",    name: "Claude 4.6 Opus",     reasoning: true,  input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 200000, maxTokens: 16000 },
+      { id: "claude-v4.6-sonnet",  name: "Claude 4.6 Sonnet",   reasoning: true,  input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 200000, maxTokens: 16000 },
+      // DeepSeek
+      { id: "deepseek-r1",         name: "DeepSeek R1",          reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 64000,  maxTokens: 8192  },
+      // Llama
+      { id: "llama-4-maverick-17b-instruct", name: "Llama 4 Maverick 17B", reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096 },
+      { id: "llama-4-scout-17b-instruct",    name: "Llama 4 Scout 17B",    reasoning: true,  input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096 },
+      { id: "llama3-3-70b-instruct",         name: "Llama 3.3 70B",        reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096 },
+      // Mistral
+      { id: "mistral-7b-instruct", name: "Mistral 7B Instruct",  reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 32000,  maxTokens: 4096  },
+      { id: "mistral-large",       name: "Mistral Large",         reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096  },
+      { id: "mistral-large-2",     name: "Mistral Large 2",       reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096  },
+      { id: "mixtral-8x7b-instruct", name: "Mixtral 8x7B",        reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 32000,  maxTokens: 4096  },
+      // Qwen
+      { id: "qwen3-32b",           name: "Qwen3 32B",             reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 8192  },
+      // OpenAI aliases
+      { id: "gpt-3.5-turbo",       name: "GPT-3.5 Turbo",         reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 16385,  maxTokens: 4096  },
+      { id: "gpt-3.5-turbo-16k",   name: "GPT-3.5 Turbo 16K",     reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 16385,  maxTokens: 4096  },
+      { id: "gpt-4",               name: "GPT-4",                  reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 8192,   maxTokens: 4096  },
+      { id: "gpt-4-turbo",         name: "GPT-4 Turbo",            reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096  },
+      { id: "gpt-4o",              name: "GPT-4o",                 reasoning: false, input: ["text"], cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 128000, maxTokens: 4096  },
+    ],
+  });
 }
