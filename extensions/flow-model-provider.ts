@@ -11,6 +11,10 @@ import {
   calculateCost,
 } from "@earendil-works/pi-ai";
 import OpenAI from "openai";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
+const BASE_URL = process.env.FLOW_MODEL_PROVIDER_URL;
+if (!BASE_URL) throw new Error("FLOW_MODEL_PROVIDER_URL is not set. Export it in your shell profile before starting pi.");
 
 function convertMessages(messages: Message[], systemPrompt?: string): any[] {
   const result: any[] = [];
