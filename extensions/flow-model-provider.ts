@@ -191,7 +191,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerProvider("flow-model-provider", {
     name: "Flow Model Provider",
     baseUrl: BASE_URL,
-    apiKey: "FLOW_MODEL_PROVIDER_KEY",
+    apiKey: "$FLOW_MODEL_PROVIDER_KEY",
     api: "openai-completions",
     streamSimple: streamNonStreamingOpenAI,
     models: [
